@@ -2,33 +2,68 @@ package cs431.p3;
 
 public class Board {
 	public class Coord {
-		int row,col;
-		public Coord(int row, int col) {set(row,col);}
+		String location;
+		int row;
+		int col;
+		public Coord() {};
 		public Coord(String location) {set(location);}
+		public Coord(int row, int col) {set(row, col);}
 		
 		public void set(int row, int col) {
+			this.location = String.valueOf(row+'A')+String.valueOf(col+'1');
 			this.row = row;
 			this.col = col;
+			/*
+			if (!isValidLocation()) {
+				throw new RuntimeException("Location not on board.");
+			}
+			*/
 		}
 		
 		public void set(String location) {
-			this.row = location.charAt(0)-'A';
-			this.col = location.charAt(1)-'1';
+			this.location = location;
+			if (isValidLocation()) {
+				this.row = location.charAt(0)-'A';
+				this.col = location.charAt(1)-'1';
+			}
+			/*
+			else {
+				throw new RuntimeException("Location not on board.");
+			}*/
 		}
 		
 		public int getRow(){return row;}
 		public int getCol(){return col;}
+
+		public boolean isEmpty() {
+			return isValidLocation() && !(board[row][col] == '#');
+		}
 		
-		public boolean isDiagonal(Coord other) {
-			boolean isDiagonal = false;
-			if (other.row-other.col == this.row-this.col) {
-				isDiagonal = true;
-			}
-			else if (other.row+other.col == this.row+this.col) {
-				isDiagonal = true;
-			}
-			
-			return isDiagonal;
+		private boolean isValidLocation(){
+			return (location.length() == 2
+					&& location.charAt(0) >= 'A' 
+					&& location.charAt(0) < board.length+'A'
+					&& location.charAt(1) >= '1'
+					&& location.charAt(1) < board.length+'1');
+		}
+
+		public boolean isEmpty(int row, int col) {
+			return isValidLocation(row,col) && (board[row][col] == '-');
+		}
+		
+		private boolean isValidLocation(String loc) {
+			return (loc.length() == 2
+					&& loc.charAt(0) >= 'A' 
+					&& loc.charAt(0) < board.length+'A'
+					&& loc.charAt(1) >= '1'
+					&& loc.charAt(1) < board.length+'1');
+		}
+		
+		public boolean isValidLocation(int row, int col) {
+			return (row >= 0
+					&& row < board.length
+					&& col >= 0
+					&& col < board.length);
 		}
 	}
 	
@@ -60,13 +95,36 @@ public class Board {
 		board[p.getRow()][p.getCol()] = p.getSymbol();
 	}
 	
+	public boolean isSurrounded(Player p) {
+		int i = p.getRow();
+		int j = p.getCol();
+		
+		Coord c = new Coord();
+		
+		return (!c.isEmpty(i,j-1)
+				&& !c.isEmpty(i,j+1)
+				&& !c.isEmpty(i-1,j)
+				&& !c.isEmpty(i+1,j)
+				&& !c.isEmpty(i+1,j+1)
+				&& !c.isEmpty(i-1,j-1)
+				&& !c.isEmpty(i+1,j-1)
+				&& !c.isEmpty(i-1,j+1));
+	}
+	
+	/*
+	public boolean getValidMoves() {
+		
+	}
+	*/
+	
 	public boolean isValidMove(Player p, String loc) {
-		if (!isValidLocation(loc)) {
-			return false;
-		}
 		
 		boolean isValid = false;
 		Coord dest = new Coord(loc);
+
+		if (!dest.isValidLocation()) {
+			return false;
+		}
 		
 		int vertDist = dest.getRow()-p.getRow();
 		int horDist = dest.getCol()-p.getCol();
@@ -93,7 +151,7 @@ public class Board {
 		}
 		else if (horDist == vertDist) { // along upwards diagonal
 			int direction = Integer.signum(vertDist);
-			for (int i = 1; i < Math.abs(vertDist); i++){
+			for (int i = 1; i <= Math.abs(vertDist); i++){
 				if (board[p.getRow()+(direction*i)][p.getCol()+(direction*i)] != '-') {
 					return false;
 				}
@@ -102,7 +160,7 @@ public class Board {
 		}
 		else if (horDist == -vertDist) { // along downwards diagonal
 			int direction = Integer.signum(vertDist);
-			for (int i = 1; i < Math.abs(vertDist); i++){
+			for (int i = 1; i <= Math.abs(vertDist); i++){
 				if (board[p.getRow()+(direction*i)][p.getCol()-(direction*i)] != '-') {
 					return false;
 				}
@@ -110,18 +168,6 @@ public class Board {
 			isValid = true;
 		}
 		return isValid;
-	}
-
-	public boolean isGameOver() {
-		return true;
-	}
-	
-	public boolean isValidLocation(String location) {
-		return (location.length() == 2
-				&& location.charAt(0) >= 'A' 
-				&& location.charAt(0) < board.length+'A'
-				&& location.charAt(1) >= '1'
-				&& location.charAt(1) < board.length+'1');
 	}
 
 }

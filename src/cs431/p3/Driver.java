@@ -10,7 +10,6 @@ public class Driver {
 		Game g= new Game(in);
 		g.start();
 		
-		//Prototypes.validMoveTest("A1", "A2");
 	}
 
 }

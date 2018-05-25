@@ -7,7 +7,7 @@ public class Computer extends Player{
 	}
 
 	@Override
-	public String move(Board b) {
+	public String getMove(Board b) {
 		String move = "H8";
 		System.out.println(getName() + "moves to " + move+"\n");
 		return move;

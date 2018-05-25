@@ -37,5 +37,5 @@ public abstract class Player {
 		return location.charAt(1)-'1';
 	}
 	
-	public abstract String move(Board b);
+	public abstract String getMove(Board b);
 }

@@ -22,17 +22,30 @@ public class Game {
 				new Human("Player2", 'O', "H8", in)};
 		board = new Board(players);
 		
-		//while (currentPlayer().hasMoves(board)) {
-		while(true) {
+		while (!board.isSurrounded(currentPlayer())) {
 			System.out.println(displayBoard());
-			String move = currentPlayer().move(board);
+			
+			
+			//**** clean
+			String move = currentPlayer().getMove(board);
+			while (!board.isValidMove(currentPlayer(), move)) {
+				System.out.println("\nInvalid Move!\n");
+				System.out.println(displayBoard());
+				move = currentPlayer().getMove(board);
+			}
+			board.move(currentPlayer(), move);
+			
+			//**** end clean
 			history.add(move);
 			turns++;
 		}
+		System.out.println(displayBoard());
+		System.out.println(otherPlayer() + "wins!");
 	}
 	
 	private String displayBoard() {
 		StringBuilder sb = new StringBuilder();
+		String[] historyList = displayableHistoryList();
 		sb.append("  ");
 		for (int i = 1; i <= board.getBoard().length; i++) {
 			sb.append(i+" ");
@@ -43,23 +56,38 @@ public class Game {
 			for (int j = 0; j < board.getBoard().length; j++) {
 				sb.append(board.getBoard()[i][j] + " ");
 			}
-			if (i < history.size()) {
-				sb.append("\t"+(i+1)+". "+history.get(i));
+			if (i < historyList.length) {
+				sb.append("\t"+(i+1)+". "+historyList[i]);
 			}
 			sb.append("\n");
 		}
-		if (history.size()>0) {
+		if (historyList.length >= board.getBoard().length) {
+			for (int i = board.getBoard().length; i < historyList.length; i++) {
+				sb.append("\t\t\t"+(i+1)+". "+historyList[i]+"\n");
+			}
+		}
+		
+		if (historyList.length>0) {
 			sb.append("\n"+otherPlayer().getName() + "'s Move is: "
 					+ history.get(history.size() - 1) + "\n");
 		}
 		
-		if (history.size() > board.getBoard().length) {
-			for (int i = board.getBoard().length; ; i++) {
-				sb.append("\t\t\t\t\t"+i+". "+history.get(i)+"\n");
-			}
-		}
 		
 		return sb.toString();
+	}
+	
+	private String[] displayableHistoryList(){
+		int historyListSize = (int)Math.ceil((double)(history.size())/2);
+		String[] historyList = new String[historyListSize];
+		for (int i = 0; i < historyList.length; i++) {
+			historyList[i] = "";
+		}
+		
+		for (int i = 0; i < history.size(); i++) {
+			historyList[i/2]+=history.get(i)+" ";
+		}
+		
+		return historyList;
 	}
 	
 	private Player currentPlayer() {
