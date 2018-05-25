@@ -7,6 +7,12 @@ public abstract class Player {
 	private String location;
 	private char symbol;
 	
+	public Player(String name) {
+		this.name = name;
+		this.symbol = '?';
+		this.location = "A1";
+	}
+	
 	public Player(String name, char symbol, String location) {
 		this.name = name;
 		this.symbol = symbol;
@@ -25,6 +31,10 @@ public abstract class Player {
 		return location;
 	}
 	
+	public void setSymbol(char symbol) {
+		this.symbol = symbol;
+	}
+	
 	public char getSymbol() {
 		return symbol;
 	}
@@ -37,5 +47,10 @@ public abstract class Player {
 		return location.charAt(1)-'1';
 	}
 	
-	public abstract String getMove(Board b);
+	@Override
+	public String toString() {
+		return name;
+	}
+	
+	public abstract String getMove(BoardController bc);
 }

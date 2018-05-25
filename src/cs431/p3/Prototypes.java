@@ -1,6 +1,22 @@
 package cs431.p3;
 
+import java.util.Scanner;
+
 public class Prototypes {
+	public static void testUndo(Scanner in) {
+		Player[] p = new Player[] {new Human("Dimitri",in), new Human("Vivian",in)};
+		Board b = Board.createBoard(p);
+		
+		BoardController bc = new BoardController(b,p);
+		bc.move(p[0], "A2");
+		bc.move(p[1], "H7");
+		System.out.println(BoardDisplay.display(b, p));
+		bc.undo();
+		bc.undo();
+		System.out.println(BoardDisplay.display(b, p));
+		System.out.println(bc.current());
+	}
+	
 	public static boolean isValidLocationTest(String location) {
 		return (location.length() == 2
 				&& location.charAt(0) >= 'A' 
