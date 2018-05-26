@@ -3,16 +3,52 @@ package cs431.p3;
 import java.util.Scanner;
 
 public class Prototypes {
+	public static void computerTest(Scanner in) {
+		Player[] p = new Player[] {new Computer("Dimitri"), new Computer("PC1")};
+		BoardController bc = new BoardController(Board.createBoard(p),p);
+		while(!bc.isSurrounded()) {
+			bc.promptNextMove();
+		}
+		System.out.println("Game Over");
+	}
+	
+	public static void timeLimitTest() {
+		int sec = 3;
+		long cur = System.currentTimeMillis();
+		long result = System.currentTimeMillis() + sec*1000;
+		
+		while(System.currentTimeMillis() < result) {
+			System.out.println(System.currentTimeMillis());
+		}
+		System.out.println(cur);
+		System.out.println(result);
+		System.out.println(cur/1000);
+		System.out.println(result/1000);
+	}
+	public static void testValidMoves(Scanner in) {
+		Player[] p = new Player[] {new Human("Dimitri",in), new Human("Vivian",in)};
+		Board b = Board.createBoard(p);
+		
+		String[] validMoves = b.getValidMoves(p[0].getLocation());
+		for (String s : validMoves) {
+			System.out.println(s);
+		}
+		
+		System.out.println(BoardDisplay.display(b, p));
+	}
+	
 	public static void testUndo(Scanner in) {
 		Player[] p = new Player[] {new Human("Dimitri",in), new Human("Vivian",in)};
 		Board b = Board.createBoard(p);
 		
 		BoardController bc = new BoardController(b,p);
-		bc.move(p[0], "A2");
-		bc.move(p[1], "H7");
+		for (int i = 0; i < 3; i++) {
+			bc.forceNextMove(bc.getRandomValidMove());
+		}
 		System.out.println(BoardDisplay.display(b, p));
-		bc.undo();
-		bc.undo();
+		for (int i = 0; i < 3; i++) {
+			bc.undo();
+		}
 		System.out.println(BoardDisplay.display(b, p));
 		System.out.println(bc.current());
 	}

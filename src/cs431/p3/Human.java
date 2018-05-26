@@ -20,7 +20,7 @@ public class Human extends Player {
 		
 		System.out.println("Enter "+ getName() +"'s ("+getSymbol() + ") move: ");
 		String move = in.next();
-		System.out.print("\n");
+		System.out.print("\n\n");
 		
 		return move;
 	}

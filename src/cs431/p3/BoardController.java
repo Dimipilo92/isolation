@@ -1,5 +1,7 @@
 package cs431.p3;
 
+import java.util.Random;
+
 public class BoardController {
 	Board board;
 	Player[] players;
@@ -12,10 +14,44 @@ public class BoardController {
 	public Board getBoard() {
 		return board;
 	}
+	
+	public boolean isSurrounded() {
+		return board.isSurrounded(current().getLocation());
+	}
+	
+	public int surroundedBy() {
+		return board.surroundedBy(current().getLocation());
+	}
+	
+	public int opponentSurroundedBy() {
+		return board.surroundedBy(waiting().getLocation());
+	}
+	
+	public void promptNextMove() {
+		System.out.println(BoardDisplay.display(board, players));
+		String move = current().getMove(this);
+		while (!board.isValidMove(current().getLocation(), move)) {
+			System.out.println("Invalid Move!\n");
+			System.out.println(BoardDisplay.display(board, players));
+			move = current().getMove(this);
+		}
+		forceNextMove(move);
+	}
 
-	public void move(Player p, String dest) {
-		board.move(p.getLocation(), dest);
-		p.setLocation(dest);
+	public void forceNextMove(String dest) {
+		board.move(current().getLocation(), dest);
+		waiting().setLocation(dest);
+	}
+	
+	public String[] getValidMoves() {
+		return board.getValidMoves(current().getLocation());
+	}
+	
+	public String getRandomValidMove() {
+		Random rand = new Random();
+		String[] validMoves = board.getValidMoves(current().getLocation());
+		int i = rand.nextInt(validMoves.length);
+		return validMoves[i];
 	}
 	
 	public void undo() {
@@ -30,5 +66,9 @@ public class BoardController {
 	
 	public Player waiting() {
 		return players[(board.totalMoves()+1)%2];
+	}
+	
+	public void displayBoard() {
+		System.out.println(BoardDisplay.display(board, players));
 	}
 }

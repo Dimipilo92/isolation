@@ -3,29 +3,22 @@ package cs431.p3;
 import java.util.Scanner;
 
 public class Game {
-	Board board;
-	Player[] players;
+	BoardController bc;
+	
 	Scanner in;
 	
 	public Game(Scanner in) {
+		Player[] players;
 		this.in = in;
 		players = new Player[]{new Human("Player1", in), new Human("Player2", in)};
-		board = Board.createBoard(players);
+		bc = new BoardController(Board.createBoard(players),players);
 	}
 	
 	public void start() {
-		BoardController bc = new BoardController(board,players);
-		while (!board.isSurrounded(bc.current())) {
-			System.out.println(BoardDisplay.display(board, players));
-			String move = bc.current().getMove(bc);
-			while (!board.isValidMove(bc.current(), move)) {
-				System.out.println("\nInvalid Move!\n");
-				System.out.println(BoardDisplay.display(board, players));
-				move = bc.current().getMove(bc);
-			}
-			bc.move(bc.current(), move);
+		while (!bc.isSurrounded()) {
+			bc.promptNextMove();
 		}
-		System.out.println(BoardDisplay.display(board, players));
+		bc.displayBoard();
 		System.out.println(bc.waiting().getName() + " wins!");
 	}
 }

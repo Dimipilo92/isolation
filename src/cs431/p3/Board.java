@@ -1,23 +1,25 @@
 package cs431.p3;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 public class Board {
 	
 	private class Coord {
-		String location;
 		int row;
 		int col;
+		
 		public Coord() {};
 		public Coord(String location) {set(location);}
 		
+		public void set(int row, int col) {
+			this.row = row;
+			this.col = col;
+		}
+		
 		public void set(String location) {
-			this.location = location;
-			if (isValidLocation()) {
+			if (isValidLocation(location)) {
 				this.row = location.charAt(0)-'A';
 				this.col = location.charAt(1)-'1';
 			}
@@ -26,23 +28,40 @@ public class Board {
 		public int getRow(){return row;}
 		public int getCol(){return col;}
 		
-		private boolean isValidLocation(){
+		private boolean isValidLocation(String location){
 			return (location.length() == 2
 					&& location.charAt(0) >= 'A' 
 					&& location.charAt(0) < board.length+'A'
 					&& location.charAt(1) >= '1'
 					&& location.charAt(1) < board.length+'1');
 		}
+		
+		public boolean isEmpty() {
+			return isEmpty(row,col);
+		}
 
 		public boolean isEmpty(int row, int col) {
 			return isValidLocation(row,col) && (board[row][col] == '-');
 		}
 		
+		public boolean isValidLocation() {
+			return isValidLocation(row,col);
+		}
 		public boolean isValidLocation(int row, int col) {
 			return (row >= 0
 					&& row < board.length
 					&& col >= 0
 					&& col < board.length);
+		}
+		
+		public void goUp() {row--;}
+		public void goDown() {row++;}
+		public void goLeft() {col--;}
+		public void goRight() {col++;}
+		
+		
+		public String getLocation() {
+			 return String.valueOf((char)(row+'A'))+String.valueOf((char)(col+'1'));
 		}
 	}
 
@@ -107,10 +126,10 @@ public class Board {
 	}
 	
 	public String undo() {
-		String lastMove = history.get(history.size()-1);
+		String lastMoveMoveMade = history.get(history.size()-1);
 		history.remove(history.size()-1);
 		String prevPosition = history.get(history.size()-2);
-		Coord src = new Coord(lastMove);
+		Coord src = new Coord(lastMoveMoveMade);
 		Coord dst = new Coord(prevPosition);
 		
 		char symbol = board[src.getRow()][src.getCol()];
@@ -119,39 +138,120 @@ public class Board {
 		return prevPosition;
 	}
 	
-	public boolean isSurrounded(Player p) {
-		int i = p.getRow();
-		int j = p.getCol();
+	public int surroundedBy(String loc) {
 		
-		Coord c = new Coord();
+		int total = 0;
+		Coord c = new Coord(loc);
+
+		int i = c.getRow();
+		int j = c.getCol();
 		
-		return (!c.isEmpty(i,j-1)
-				&& !c.isEmpty(i,j+1)
-				&& !c.isEmpty(i-1,j)
-				&& !c.isEmpty(i+1,j)
-				&& !c.isEmpty(i+1,j+1)
-				&& !c.isEmpty(i-1,j-1)
-				&& !c.isEmpty(i+1,j-1)
-				&& !c.isEmpty(i-1,j+1));
+		if (!c.isEmpty(i,j-1)) {
+			total++;
+		}
+		if (!c.isEmpty(i,j+1)) {
+			total++;
+		}
+		if (!c.isEmpty(i-1,j)) {
+			total++;
+		}
+		if (!c.isEmpty(i+1,j)) {
+			total++;
+		}
+		if (!c.isEmpty(i+1,j+1)) {
+			total++;
+		}
+		if (!c.isEmpty(i-1,j-1)) {
+			total++;
+		}
+		if (!c.isEmpty(i+1,j-1)) {
+			total++;
+		}
+		if (!c.isEmpty(i-1,j+1)){
+			total++;
+		}
+		
+		return total;
 	}
 	
-	public boolean isValidMove(Player p, String loc) {
+	public boolean isSurrounded(String loc) {
+		return surroundedBy(loc) == 8;
+	}
+	
+	
+	public String[] getValidMoves(String loc) {
+		List<String> validMoves = new ArrayList<String>();
+
+		Coord c = new Coord(loc);
+		int i = c.getRow();
+		int j = c.getCol();
+		
+		c.set(i-1,j);
+		while (c.isEmpty()) {
+			validMoves.add(c.getLocation());
+			c.goUp();
+		}
+		c.set(i+1,j);
+		while (c.isEmpty()) {
+			validMoves.add(c.getLocation());
+			c.goDown();
+		}
+		c.set(i,j-1);
+		while (c.isEmpty()) {
+			validMoves.add(c.getLocation());
+			c.goLeft();
+		}
+		c.set(i,j+1);
+		while (c.isEmpty()) {
+			validMoves.add(c.getLocation());
+			c.goRight();
+		}
+		c.set(i-1,j+1);
+		while (c.isEmpty()) {
+			validMoves.add(c.getLocation());
+			c.goUp();
+			c.goRight();
+		}
+		c.set(i+1,j-1);
+		while (c.isEmpty()) {
+			validMoves.add(c.getLocation());
+			c.goDown();
+			c.goLeft();
+		}
+		c.set(i-1,j-1);
+		while (c.isEmpty()) {
+			validMoves.add(c.getLocation());
+			c.goUp();
+			c.goLeft();
+		}
+		c.set(i+1,j+1);
+		while (c.isEmpty()) {
+			validMoves.add(c.getLocation());
+			c.goDown();
+			c.goRight();
+		}
+		
+		return validMoves.toArray(new String[0]);
+	}
+	
+	public boolean isValidMove(String loc1, String loc2) {
 		
 		boolean isValid = false;
-		Coord dest = new Coord(loc);
+		Coord src = new Coord(loc1);
+		Coord dest = new Coord(loc2);
 
 		if (!dest.isValidLocation()) {
 			return false;
 		}
 		
-		int vertDist = dest.getRow()-p.getRow();
-		int horDist = dest.getCol()-p.getCol();
+		int vertDist = dest.getRow()-src.getRow();
+		int horDist = dest.getCol()-src.getCol();
 		if (horDist == 0 && vertDist == 0) {
 			return false;
 		} 
 		else if (horDist == 0) { // up & down
 			int direction = Integer.signum(vertDist);
-			for (int i = p.getRow()+direction; i != dest.getRow()+direction; i+=direction){
+			for (int i = src.getRow()+direction; i != dest.getRow()+direction; i+=direction){
 				if (board[i][dest.getCol()] != '-') {
 					return false;
 				}
@@ -160,7 +260,7 @@ public class Board {
 		}
 		else if (vertDist == 0) { // left & right
 			int direction = Integer.signum(horDist);
-			for (int i = p.getCol()+direction; i != dest.getCol()+direction; i+=direction){
+			for (int i = src.getCol()+direction; i != dest.getCol()+direction; i+=direction){
 				if (board[dest.getRow()][i] != '-') {
 					return false;
 				}
@@ -170,7 +270,7 @@ public class Board {
 		else if (horDist == vertDist) { // along upwards diagonal
 			int direction = Integer.signum(vertDist);
 			for (int i = 1; i <= Math.abs(vertDist); i++){
-				if (board[p.getRow()+(direction*i)][p.getCol()+(direction*i)] != '-') {
+				if (board[src.getRow()+(direction*i)][src.getCol()+(direction*i)] != '-') {
 					return false;
 				}
 			}
@@ -179,7 +279,7 @@ public class Board {
 		else if (horDist == -vertDist) { // along downwards diagonal
 			int direction = Integer.signum(vertDist);
 			for (int i = 1; i <= Math.abs(vertDist); i++){
-				if (board[p.getRow()+(direction*i)][p.getCol()-(direction*i)] != '-') {
+				if (board[src.getRow()+(direction*i)][src.getCol()-(direction*i)] != '-') {
 					return false;
 				}
 			}
