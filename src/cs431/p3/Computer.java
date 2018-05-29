@@ -21,7 +21,7 @@ public class Computer extends Player{
 		public boolean isCutOff() {return value != Integer.MAX_VALUE;};
 	}
 	
-	private final static int TIME_CONSTRAINT = 2;
+	private final static int TIME_CONSTRAINT = 5;
 	
 	public Computer(String name) {
 		super(name);
@@ -134,8 +134,11 @@ public class Computer extends Player{
 			evaluation = Integer.MIN_VALUE;
 		}
 		else {
-			evaluation+=bc.opponentSurroundedBy();
-			evaluation-=bc.surroundedBy();
+			// Don't know if this is any good
+			evaluation += (bc.opponentSurroundedBy() - 2 * bc.surroundedBy()) + 
+				(bc.board.totalMoves() / 2 + 2 * bc.opponentSurroundedBy()) / 13;
+//			evaluation+=bc.opponentSurroundedBy();
+//			evaluation-=bc.surroundedBy();
 		}
 		return evaluation;
 	}
