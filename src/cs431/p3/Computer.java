@@ -135,12 +135,12 @@ public class Computer extends Player{
 		if (bc.isSurrounded()){
 			evaluation = Integer.MIN_VALUE;
 		}
-		else {
-			// Don't know if this is any good
-			evaluation += (bc.opponentSurroundedBy() - 2 * bc.surroundedBy()) + 
-				(bc.board.totalMoves() / 2 + 2 * bc.opponentSurroundedBy()) / 13;
-//			evaluation+=bc.opponentSurroundedBy();
-//			evaluation-=bc.surroundedBy();
+		if (bc.getValidMoves().length > 5) {
+			evaluation = bc.getValidMoves().length - bc.opponentValidMoves().length;
+		}
+		if (bc.getValidMoves().length <= 5) {
+			evaluation += bc.surroundedBy();
+			evaluation -= bc.opponentSurroundedBy();
 		}
 		return evaluation;
 	}

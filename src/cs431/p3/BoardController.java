@@ -47,6 +47,10 @@ public class BoardController {
 		return board.getValidMoves(current().getLocation());
 	}
 	
+	public String[] opponentValidMoves() {
+		return board.getValidMoves(waiting().getLocation());
+	}
+	
 	public String getRandomValidMove() {
 		Random rand = new Random();
 		String[] validMoves = board.getValidMoves(current().getLocation());
