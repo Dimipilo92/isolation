@@ -81,7 +81,7 @@ public class Computer extends Player{
 	}
 	
 	private int maxValue(BoardController bc, int alpha, int beta, int depth, long time) {
-		if (cutoff(bc, depth)) {
+		if (cutoff(bc, depth, time)) {
 			return evaluate(bc);
 		}
 		int v = Integer.MIN_VALUE;
@@ -101,7 +101,7 @@ public class Computer extends Player{
 	}
 	
 	private int minValue(BoardController bc, int alpha, int beta, int depth, long time) {
-		if (cutoff(bc, depth)) {
+		if (cutoff(bc, depth, time)) {
 			return evaluate(bc);
 		}
 		int v = Integer.MAX_VALUE;
@@ -124,8 +124,8 @@ public class Computer extends Player{
 		return System.currentTimeMillis() + sec*1000;
 	}
 	
-	private boolean cutoff(BoardController bc, int depth) {
-		return (bc.isSurrounded() || depth <= 0);
+	private boolean cutoff(BoardController bc, int depth, long time) {
+		return (bc.isSurrounded() || depth <= 0 || outOfTime(time));
 	}
 	
 	private int evaluate(BoardController bc){
