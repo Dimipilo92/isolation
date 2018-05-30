@@ -134,8 +134,11 @@ public class Computer extends Player{
 			evaluation = Integer.MIN_VALUE;
 		}
 		else {
-			evaluation+=bc.opponentSurroundedBy();
-			evaluation-=bc.surroundedBy();
+			// Don't know if this is any good
+			evaluation += (bc.opponentSurroundedBy() - 2 * bc.surroundedBy()) + 
+				(bc.board.totalMoves() / 2 + 2 * bc.opponentSurroundedBy()) / 13;
+//			evaluation+=bc.opponentSurroundedBy();
+//			evaluation-=bc.surroundedBy();
 		}
 		return evaluation;
 	}

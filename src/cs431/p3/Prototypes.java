@@ -4,7 +4,16 @@ import java.util.Scanner;
 
 public class Prototypes {
 	public static void computerTest(Scanner in) {
-		Player[] p = new Player[] {new Computer("Dimitri"), new Computer("PC1")};
+		Player[] p = new Player[] {new Computer("PC1"), new Computer("PC2")};
+		BoardController bc = new BoardController(Board.createBoard(p),p);
+		while(!bc.isSurrounded()) {
+			bc.promptNextMove();
+		}
+		System.out.println("Game Over");
+	}
+	
+	public static void pVpTest(Scanner in) {
+		Player[] p = new Player[] {new Human("Dimitri", in), new Human("Vivian", in)};
 		BoardController bc = new BoardController(Board.createBoard(p),p);
 		while(!bc.isSurrounded()) {
 			bc.promptNextMove();
