@@ -4,7 +4,7 @@ import java.util.Scanner;
 
 public class Prototypes {
 	public static void computerTest(Scanner in) {
-		Player[] p = new Player[] {new Computer("PC1"), new Computer("PC2")};
+		Player[] p = new Player[] {new Computer("PC1",2), new Computer("PC2",2)};
 		BoardController bc = new BoardController(Board.createBoard(p),p);
 		while(!bc.isSurrounded()) {
 			bc.promptNextMove();

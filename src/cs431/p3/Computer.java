@@ -21,14 +21,16 @@ public class Computer extends Player{
 		public boolean isCutOff() {return value != Integer.MAX_VALUE;};
 	}
 	
-	private final static int TIME_CONSTRAINT = 2;
+	private int timeConstraint;
 	
-	public Computer(String name) {
+	public Computer(String name, int timeConstraint) {
 		super(name);
+		this.timeConstraint = timeConstraint;
 	}
 	
-	public Computer(String name, char symbol, String location) {
+	public Computer(String name, char symbol, String location, int timeConstraint) {
 		super(name, symbol, location);
+		this.timeConstraint = timeConstraint;
 	}
 
 	@Override
@@ -43,7 +45,7 @@ public class Computer extends Player{
 		int depth = 2;
 		Result result = new Result();
 		Result lastResult = null;
-		long timeLimit = getTimeLimit(TIME_CONSTRAINT);
+		long timeLimit = getTimeLimit(timeConstraint);
 		while (!(result == null) || (lastResult == null)) { // result is maximum not cutoff
 			lastResult = result;
 			result = limitedABSearch(bc, depth,timeLimit);

@@ -5,8 +5,7 @@ public class BoardDisplay {
 	public static String display(Board b, Player[] p) {
 		StringBuilder sb = new StringBuilder();
 		String[] historyList = displayableHistoryList(b);
-		sb.append("  ");
-		
+
 		// above the header (history > 9)
 		int h = 0;
 		if (historyList.length > b.getBoard().length) {
@@ -17,7 +16,7 @@ public class BoardDisplay {
 		}
 		
 		// header
-		//sb.append("  ");
+		sb.append("  ");
 		for (int i = 1; i <= b.getBoard().length; i++) {
 			sb.append(i+" ");
 		}

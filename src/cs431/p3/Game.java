@@ -7,13 +7,13 @@ public class Game {
 	
 	Scanner in;
 	
-	public Game(Scanner in, int mode) {
+	public Game(Scanner in, int mode, int timeConstraint) {
 		Player[] players = {};
 		this.in = in;
 		if (mode == 1) {
-			players = new Player[] {new Computer("PC1"), new Human("Opponent", in)};
+			players = new Player[] {new Computer("PC1",timeConstraint), new Human("Opponent", in)};
 		} else if (mode == 2) {
-			players = new Player[] {new Human("Opponent", in), new Computer("PC1")};
+			players = new Player[] {new Human("Opponent", in), new Computer("PC1",timeConstraint)};
 		} else {
 			System.out.println("Invalid choice.");
 		}
