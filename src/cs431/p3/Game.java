@@ -7,10 +7,17 @@ public class Game {
 	
 	Scanner in;
 	
-	public Game(Scanner in) {
-		Player[] players;
+	public Game(Scanner in, int mode) {
+		Player[] players = {};
 		this.in = in;
-		players = new Player[]{new Human("Player1", in), new Human("Player2", in)};
+		if (mode == 1) {
+			players = new Player[] {new Computer("PC1"), new Human("Opponent", in)};
+		} else if (mode == 2) {
+			players = new Player[] {new Human("Opponent", in), new Computer("PC1")};
+		} else {
+			System.out.println("Invalid choice.");
+		}
+//		players = new Player[]{new Human("Player1", in), new Human("Player2", in)};
 		bc = new BoardController(Board.createBoard(players),players);
 	}
 	

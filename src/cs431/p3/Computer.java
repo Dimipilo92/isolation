@@ -21,7 +21,7 @@ public class Computer extends Player{
 		public boolean isCutOff() {return value != Integer.MAX_VALUE;};
 	}
 	
-	private final static int TIME_CONSTRAINT = 5;
+	private final static int TIME_CONSTRAINT = 2;
 	
 	public Computer(String name) {
 		super(name);

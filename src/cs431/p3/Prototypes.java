@@ -12,6 +12,15 @@ public class Prototypes {
 		System.out.println("Game Over");
 	}
 	
+	public static void pVpTest(Scanner in) {
+		Player[] p = new Player[] {new Human("Dimitri", in), new Human("Vivian", in)};
+		BoardController bc = new BoardController(Board.createBoard(p),p);
+		while(!bc.isSurrounded()) {
+			bc.promptNextMove();
+		}
+		System.out.println("Game Over");
+	}
+	
 	public static void timeLimitTest() {
 		int sec = 3;
 		long cur = System.currentTimeMillis();

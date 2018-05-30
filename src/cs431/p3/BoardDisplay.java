@@ -17,6 +17,7 @@ public class BoardDisplay {
 		}
 		
 		// header
+		//sb.append("  ");
 		for (int i = 1; i <= b.getBoard().length; i++) {
 			sb.append(i+" ");
 		}
