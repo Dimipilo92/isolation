@@ -67,7 +67,7 @@ public class Computer extends Player{
 			if (outOfTime(time)) {
 				return null;
 			}
-			if (v > bestValue){
+			if (v > bestValue || bestAction == "Nothing"){
 				bestValue = v;
 				bestAction = location;
 			}
