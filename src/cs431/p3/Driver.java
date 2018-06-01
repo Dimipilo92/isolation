@@ -7,9 +7,6 @@ public class Driver {
 	public static final Scanner in = new Scanner(System.in);
 
 	public static void main(String[] args) {
-		
-		Prototypes.computerTest(in);
-		/*
 		System.out.println("Isolation Game");
 		System.out.println("Who goes first? \n1. Computer \n2. Opponent");
 		int mode = in.nextInt();
@@ -17,7 +14,6 @@ public class Driver {
 		int timeLimit = in.nextInt();
 		Game g = new Game(in, mode, timeLimit);
 		g.start();
-		*/
 		in.close();
 	}
 }
